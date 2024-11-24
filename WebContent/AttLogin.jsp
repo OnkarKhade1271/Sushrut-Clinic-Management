@@ -1,0 +1,288 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+ <%@ page import="java.sql.*" %>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendant Login</title>
+    <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+       
+    }
+    body
+    {
+     background-image:url("clinic_bg.jpg");
+        background-size:cover;
+    }
+
+    .container {
+
+        width: 100%;
+        height: 100vh;
+        background-image: url('petshopbg.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .useful-links {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+
+    }
+
+    .container form {
+        height: 628px;
+        width: 630px;
+        padding: 110px 71px 34px 80px;
+        background-image: url(Form_bg.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        border-radius: 4px;
+       /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);*/
+        position: relative;
+    }
+
+    .input-group {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        position: relative;
+    }
+
+    .input-group label {
+        width: 140px;
+        display: inline-block;
+        font-weight: bold;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        
+    }
+
+    .input-group input,
+    .input-group textarea {
+        flex-basis: 68%;
+        background: transparent;
+        border: 0;
+        outline: 0;
+        padding: 10px 0;
+        border-bottom: 1px solid #999;
+        color: #333;
+        font-size: 16px;
+    }
+
+    ::placeholder {
+        font-size: 14px;
+    }
+
+    form button {
+        background: #141a34;
+        color: #fff;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        padding: 10px 40px;
+        outline: 0;
+        cursor: pointer;
+        display: block;
+        margin: 30px auto 10px;
+    }
+
+    .input-group span {
+        position: absolute;
+        bottom: 12px;
+        right: 17px;
+        font-size: 14px;
+        color: red;
+    }
+
+    #submit-error {
+        color: red;
+    }
+
+    .input-group span i {
+        color: seagreen;
+    }
+
+    .reset {
+        background: #141a34;
+        color: #fff;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        padding: 10px 40px;
+        outline: 0;
+        cursor: pointer;
+        display: block;
+        margin: 30px auto 10px;
+    }
+
+    h1 {
+        text-align: center;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 23px;
+        font-weight: 200px;
+        padding-top: 6px;
+        margin-top: -12px;
+
+    }
+
+    input#submit {
+        padding: 4px;
+        border-radius: 3px;
+        margin-right: 3px;
+        background-color: dodgerblue;
+        color: white;
+        width: 65px;
+        height: 31px;
+    }
+
+    input#submit:hover {
+        padding: 4px;
+        margin-right: 3px;
+        background-color: rgb(12, 84, 157);
+        color: white;
+    }
+
+    span.footer {
+        display: inline-block;
+        
+        margin-left: 130px;
+        font-size: small;
+        margin-top: 29px;
+    }
+
+    span.footer a {
+        display: inline-block;
+        
+        margin-left: 5px;
+        color: blue;
+    }
+
+    center {
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+    .green-navbar {
+  background-color: #04AA6D;
+  color: #fff;
+  margin-top: 25px;
+  height: 50px;
+  padding: 1px 0;
+}
+
+.green-navbar .green-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  color: white;
+  text-align: center;
+  margin-top: -50px;
+  padding-left: 325px;
+}
+
+.green-container {
+  max-width: 800px;
+  margin: 50px auto;
+}
+</style>
+
+<body>
+<nav class="green-navbar">
+    <div class="green-container">
+      <h1 class="logo">Sushrut Clinic</h1>
+    </div>
+  </nav>
+    <div class="container">
+        <form method="post" action="">
+            <h1>Attendant Login</h1>
+
+            <div class="input-group">
+                <label>Username: </label>
+                <input type="text" placeholder="Enter username" id="Cust-username" name="usname" >
+                <span id="username-error"></span>
+            </div>
+
+
+            <div class="input-group">
+                <label>Password: </label>
+                <input type="password" placeholder="Enter Password" name="pass" id="Cust-password" >
+                <span id="password-error"></span>
+
+            </div>
+
+            <center>
+                <input type="submit" value="Submit" id="submit" name="submit" onclick="return validateForm()">
+                <span id="submit-error"></span>
+                <input type="reset" value="Clear" id="submit">
+            </center>
+
+
+        </form>
+        
+        <%
+String usname=request.getParameter("usname");
+String pass=request.getParameter("pass");
+try
+{
+Class.forName("com.mysql.cj.jdbc.Driver");
+System.out.println("Driver Loaded");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/SushrutClinic","root","root");
+System.out.println("Connection Success !......");
+PreparedStatement ps=con.prepareStatement("select * from attendant where username=?");
+ps.setString(1, usname);
+ResultSet rs=ps.executeQuery();
+String us_name=null;
+String p=null;
+while(rs.next())
+{
+	us_name=rs.getString(2);
+	p=rs.getString(3);
+}
+if(us_name.equals(usname)&& p.equals(pass))
+{
+out.println("Login Successfull");
+session.setAttribute("attus",us_name);
+
+response.sendRedirect("MenuAtt.jsp");
+}
+else
+{
+	%>
+	<script type="text/javascript">
+	alert("Wrong credentials ");
+	</script>
+	<% 
+}
+con.close();
+}
+catch(Exception e)
+{
+System.out.println("Error occured");
+e.printStackTrace();
+}
+
+
+%>
+
+    </div>
+
+   
+
+</body>
+
+</html>
